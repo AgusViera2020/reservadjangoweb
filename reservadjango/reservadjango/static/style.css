@@ -1,0 +1,242 @@
+body {
+    margin-bottom: 10%;
+    padding: 0;
+    height: 100vh;
+    background: #ffffff;
+}
+
+/* Container for the logo */
+.cover {
+    display: flex;
+    align-items: center;
+    max-width: 100%; 
+}
+
+#titulo{font-family: 'Times New Roman', Times, serif;}
+
+.cover img {
+    max-width: 110px; /* Set a maximum width for the logo */
+    height: auto; /* Maintain the aspect ratio of the logo */
+}
+/* Container for all content */
+.container1 {
+    margin: 0 auto;
+    background-color: #343a40;
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-top: 5px;}
+
+.cover2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%; 
+    color: white;
+    font-weight: bolder;
+    font-size: 60px; /* Adjust the font size as needed */
+    height: 100%; /* Ensure the div fills the height of its container */
+}
+
+.container2 {
+    margin: 0 auto;
+    background-color: #343a40;
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-top: 5px;
+    height: 15%;}
+
+/* Cover photo */
+.container1 img {
+    display: flex;
+}
+
+.container {
+    max-width: 85%;
+    margin: 0 auto;
+}
+
+
+/* COLUMNAS photo */
+.container img {
+    max-width: 90%;
+    display: flex;
+}
+
+#servicios {
+    padding-top: 20px;
+}
+.card-img-top {
+    height: 200px; /* Set a fixed height for the image */
+    object-fit: contain; /* Ensure the image maintains its aspect ratio */
+    display: block; /* Ensure the image takes up the entire width of its parent */
+    margin: 15px auto; /* Horizontally center the image */
+}
+
+.text-header{
+    flex: 1;
+    text-align: right;
+    color:red;
+}
+
+
+/* Container for paragraphs */
+.text-container {
+    max-width: 100%;
+    margin: 0 auto;
+    margin-top: 10px;
+    text-align: center; /* Center the paragraphs */
+    font-family: 'Times New Roman', Times, serif; /* Set the font family to Times New Roman */
+    font-weight: 500; /* Set the font weight */
+    font-style: normal; }/* Ensure the font style is normal *
+
+/* Columns container */
+.column-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Individual column */
+.column {
+    flex: 1 0 33%; /* Each column takes up one-third of the container width */}
+
+/* Photo inside the column */
+.column img {
+    width: 100%;
+    height: 300px;
+    margin: 0 auto;
+    object-fit: cover;
+}
+.nav-tabs {
+    max-width: 100%; /* Limitar el ancho máximo de los tabs al 80% de la página */
+    margin: 20px auto 0; /* Centrar los tabs horizontalmente y agregar un espacio de 20px hacia abajo */
+    background-color: #343a40;
+}
+
+.nav-item {
+    width: 50%; /* Cada elemento del tab ocupa el 50% del contenedor */
+    text-align: center; /* Centrar el texto en cada elemento del tab */
+    background-color: #343a40;
+    border-bottom: 1px solid rgb(10, 10, 10);
+    border-style: hidden;
+    border-radius: 10px;
+}
+
+.nav-link {
+    width: 100%; /* Asegurar que los enlaces ocupen todo el ancho de su contenedor */
+    font-family: 'Times New Roman', Times, serif; /* Usar el mismo tipo de letra que los párrafos anteriores */
+    font-weight: bold; /* Hacer que el texto esté en negrita */
+    font-size: large;
+    color:white; /* Color de texto predeterminado */
+    background-color: #343a40;
+    padding: 8px 16px;}
+
+#reserva-tab:focus, #informacion-tab:focus {
+    background-color: #f3f3f3; /* Cambiar el color de fondo al pasar el mouse o al hacer clic */}
+
+.contenido-reserva-wrapper{
+    display: flex;
+    justify-content: center;
+    border: 1px solid #343a40;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.contenido-reserva{
+    width: 100%;
+}
+
+.contenido-informacion-wrapper{
+    display: flex;
+    justify-content: center;
+    border: 1px solid #343a40;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.contenido-informacion{
+    width: 100%;
+}
+
+.link a{
+    color: #343a40;
+}
+
+
+
+
+
+.container_carrito {
+    max-width: 70%;
+    margin: 0 auto;
+}
+
+
+/* COLUMNAS photo */
+.container_carrito img {
+    max-width: 70%;
+    display: flex;
+}
+
+.product-card {
+    display: flex;
+    align-items: center;
+    max-height: 150px; /* Adjust as needed */
+    margin-bottom: 10px; /* Add some space between each product */
+    border-bottom: 1px solid #ccc; /* Add border bottom */
+    cursor: pointer; /* Change cursor to pointer on hover to indicate clickability */
+}
+
+.card-img-left {
+    width: 100px; /* Adjust image width as needed */
+    height: auto; /* Keep aspect ratio */
+    margin-right: 10px; /* Add some space between image and text */
+    padding-bottom: 10px;
+}
+
+.product-info {
+    flex: 1; /* Take remaining space */
+}
+
+.product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-header p {
+    margin: 0; /* Remove default margins */
+}
+
+.price{
+    text-align: right; /* Align price to the right */
+    margin-left: auto; /* Push price to the right */
+}
+
+.total-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total {
+    margin: 0;
+}
+
+.btn {
+    margin: 0;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* Adjust as needed */
+}

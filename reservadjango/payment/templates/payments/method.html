@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>{% block title %}Pagar{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'carrito.css' %}">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <!-- Logo -->
+  <a class="navbar-brand" href="/"><img src="{% static 'logo.png' %}" alt="Logo" height="40"></a>
+  <!-- Navbar Links -->
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Categorias
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="/">Todos los productos</a>
+                  <!-- Loop through categories and generate dropdown items -->
+              </div>
+          </li>
+      </ul>
+  </div>
+  <!-- User Dropdown -->
+  {% if user.is_authenticated %}
+  <div class="dropdown">
+      <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ user.email }}
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="{% url 'accounts:update_user' %}">Actualizar usuario</a>
+          <a class="dropdown-item" href="{% url 'accounts:update_user_info' %}">Informacion del usuario</a>
+          <a class="dropdown-item" href="{% url 'payment:billing_info' %}">Información de facturación</a>
+          <a class="dropdown-item" href="{% url 'password_change' %}">Cambiar contraseña</a>
+          <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="dropdown-item">Cerrar sesión</button>
+          </form>
+          {% else %}
+          <a class="btn btn-danger" href="{% url 'accounts:login' %}">Iniciar sesión</a>
+          <a class="btn btn-danger" href="{% url 'accounts:signup' %}">Registrarse</a>
+          {% endif %}
+      </div>
+  </div>
+</nav>
+<br><br>
+<div class="container2">
+  <div class="cover2">
+      <p>Pagar</p>
+  </div>
+</div>
+<div class="form-container">
+  {% for message in messages %}
+  <div class="alert alert-secondary" role="alert">
+      {{ message }}
+  </div>
+  {% endfor %}
+</div>
+<br><br>
+<div class="container_carrito row">
+    <div class="col-md-8 ">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+            Datos de facturación
+            </div>
+            <div class="card-body">
+                <p>Nombre: {{shipping_info.shipping_nombre}}</p>
+                <p>Email: {{shipping_info.shipping_email}}</p>
+                <p>Cédula de identidad: {{shipping_info.shipping_cedula}}</p>
+                <p>Dirección: {{shipping_info.shipping_direccion}}</p>
+                <form method="POST" action="{% url 'payment:process_order' %}">
+                    {% csrf_token %}
+                    {{ billing_form.as_p}}
+                
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                          var paymentMethodField = document.getElementById('id_metodo_de_pago');
+                          var tarjetaNombreField = document.getElementById('id_tarjeta_nombre');
+                          var tarjetaNumeroField = document.getElementById('id_tarjeta_numero');
+                          var tarjetaVencimientoField = document.getElementById('id_tarjeta_vencimiento');
+                          var cvvField = document.getElementById('id_cvv');
+                        
+                          // Function to disable or enable additional fields based on selected payment method
+                          function toggleAdditionalFields() {
+                            if (paymentMethodField.value === '2') {
+                              tarjetaNombreField.removeAttribute('disabled');
+                              tarjetaNumeroField.removeAttribute('disabled');
+                              tarjetaVencimientoField.removeAttribute('disabled');
+                              cvvField.removeAttribute('disabled');
+                            } else {
+                              tarjetaNombreField.setAttribute('disabled', 'disabled');
+                              tarjetaNumeroField.setAttribute('disabled', 'disabled');
+                              tarjetaVencimientoField.setAttribute('disabled', 'disabled');
+                              cvvField.setAttribute('disabled', 'disabled');
+                            }
+                          }
+                        
+                          // Call the function initially and whenever the payment method field changes
+                          toggleAdditionalFields();
+                          paymentMethodField.addEventListener('change', toggleAdditionalFields);
+                        });
+                        </script>
+                <div class="button-container">
+                    <button type="submit" class="btn btn-secondary">Pagar</button>
+                </div>     
+                </form>       
+            </div>
+        </div>    
+    </div>
+    <div class="col-md-4 ">
+        <div class="card">
+            <div class="card-header">
+            Detalles del pedido
+            </div>
+            <div class="card-body">
+                <div class="total-container">
+                    <a href="{% url 'payment:checkout' %}" class="btn btn-sm btn-outline-secondary">Volver atrás</a>
+                    <p class="total"><strong>Total: {{ totals }}</strong></p>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>
+
+
+  {% endblock %}

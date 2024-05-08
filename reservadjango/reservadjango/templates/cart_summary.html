@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>{% block title %}Carrito{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'carrito.css' %}">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <!-- Logo -->
+  <a class="navbar-brand" href="/"><img src="{% static 'logo.png' %}" alt="Logo" height="40"></a>
+  <!-- Navbar Links -->
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Categorias
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="/">Todos los productos</a>
+                  <!-- Loop through categories and generate dropdown items -->
+              </div>
+          </li>
+      </ul>
+  </div>
+  <!-- User Dropdown -->
+  {% if user.is_authenticated %}
+  <div class="dropdown">
+      <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ user.email }}
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="{% url 'mis_reservas' %}">Mis reservas</a>
+          <a class="dropdown-item" href="{% url 'accounts:update_user' %}">Actualizar usuario</a>
+          <a class="dropdown-item" href="{% url 'accounts:update_user_info' %}">Informacion del usuario</a>
+          <a class="dropdown-item" href="{% url 'payment:billing_info' %}">Información de facturación</a>
+          <a class="dropdown-item" href="{% url 'password_change' %}">Cambiar contraseña</a>
+          <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="dropdown-item">Cerrar sesión</button>
+          </form>
+          {% else %}
+          <a class="btn btn-danger" href="{% url 'accounts:login' %}">Iniciar sesión</a>
+          <a class="btn btn-danger" href="{% url 'accounts:signup' %}">Registrarse</a>
+          {% endif %}
+      </div>
+  </div>
+</nav>
+<br><br>
+<div class="container2">
+  <div class="cover2">
+      <p>Mi carrito</p>
+  </div>
+</div>
+<div class="form-container">
+  {% for message in messages %}
+  <div class="alert alert-secondary" role="alert">
+      {{ message }}
+  </div>
+  {% endfor %}
+</div>
+<div class="container_carrito px-3 my-5 clearfix">
+    <!-- Shopping cart table -->
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered m-0">
+                <thead>
+                  <tr>
+                    <!-- Set columns width -->
+                    <th class="text-center py-3 px-4" style="min-width: 400px;">Productos</th>
+                    <th class="text-right py-3 px-4" style="width: 100px;">Precio</th>
+                    <th class="text-center py-3 px-4" style="width: 120px;">Cantidad</th>
+                    <th class="text-center align-middle py-3 px-0" style="width: 40px;"><a href="#" class="shop-tooltip float-none text-light" title="" data-original-title="Clear cart"><i class="ino ion-md-trash"></i></a></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for servicio in cart_products %}
+                  <tr>
+                    <td class="p-4">
+                      <div class="media align-items-center">
+                        <img src="{{ servicio.imagen.url }}" class="d-block ui-w-40 ui-bordered mr-4" alt="" style="max-width: 200px; max-height: 200px;">
+                        <div class="media-body">
+                          <a href="#" class="d-block text-dark">{{servicio.nombre}}</a>
+                          <small>
+                            <span class="text-muted">Descripcion:</span>
+                          </small>
+                        </div>
+                      </div>
+                    </td>
+                    {% if servicio.descuento %}
+                    <td class="text-right font-weight-semibold align-middle p-4">${{servicio.precio_descuento}}</td>
+                    {% else %}
+                    <td class="text-right font-weight-semibold align-middle p-4">${{servicio.precio}}</td>
+                    {% endif %}
+                    <td class="align-middle p-4"><select class="form-select form-select-sm w-100" id="select{{servicio.id}}" data-index="{{ servicio.id }}">
+                      <option selected>{% for key, value in cantidades.items %}
+                        {% if key == servicio.id|slugify %}
+                          {{ value }}
+                        {% endif %}
+                        {% endfor %}
+                      </option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                  </select></td>
+                    <td class="text-center align-middle px-0">
+                      <button class="btn btn-link shop-tooltip close float-none text-danger" data-index="{{ servicio.id }}" id="Remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"></path>
+                          <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"></path>
+                      </svg>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <!-- / Shopping cart table -->
+        
+            <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+              <div class="mt-4">
+                <label class="text-muted font-weight-normal">Código de descuento</label>
+                <input type="text" placeholder="Código" class="form-control">
+              </div>
+              <div class="d-flex">
+                <div class="text-right mt-4 mr-5">
+                  <label class="text-muted font-weight-normal m-0">Descuento</label>
+                  <div class="text-large"><strong>$20</strong></div>
+                </div>
+                <div class="text-right mt-4">
+                  <label class="text-muted font-weight-normal m-0">Precio total</label>
+                  <div class="text-large"><strong>${{totals}}</strong></div>
+                </div>
+              </div>
+            </div>
+        
+            <div class="float-right">
+              <a href="/" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3">Volver a comprar</a>
+              <a href="{% url 'payment:checkout' %}" class="btn btn-lg btn-primary mt-2">Finalizar compra</a>
+            </div>
+          </div>
+      </div>
+  </div>
+<br><br>
+  <script>
+    //update cart
+    $(document).on('click', '.form-select', function(e){
+      var servicio_id = $(this).attr('id').replace('select', '');
+      
+      $.ajax({
+        type:'POST',
+        url: "{% url 'cart:cart_update' %}",
+        data: {
+          servicio_id: servicio_id,
+          cantidad: $(this).val(),
+          csrfmiddlewaretoken:'{{ csrf_token }}',
+          action:'post'
+        },
+        success: function(json){
+        },
+        error: function(xhr,errmsg, err){}
+      });
+    });
+
+    //delete item from cart
+    $(document).on('click', '#Remove', function(e){
+      //var servicio_id = $(this).attr('id').replace('select', '');
+      
+      $.ajax({
+        type:'POST',
+        url: "{% url 'cart:cart_delete' %}",
+        data: {
+          servicio_id: $(this).data('index'),
+          csrfmiddlewaretoken:'{{ csrf_token }}',
+          action:'post'
+        },
+        success: function(json){
+          location.reload();
+        },
+        error: function(xhr,errmsg, err){}
+      });
+    });
+  </script>
+  {% endblock %}

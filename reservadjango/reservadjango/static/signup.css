@@ -1,0 +1,74 @@
+body {
+    margin-bottom: 10%;
+    padding: 0;
+    height: 100vh;
+    background: #ffffff;
+}
+
+.cover {
+    max-width: 100%; 
+    margin: auto; /* Center the logo container horizontally with some top and bottom margin */
+    text-align: center; /* Center the logo horizontally */
+    background-color: #343a40!important;
+    padding-top: 5px;
+}
+#titulo{font-family: 'Times New Roman', Times, serif;}
+
+.cover img {
+    max-width: 110px; /* Set a maximum width for the logo */
+    height: auto; /* Maintain the aspect ratio of the logo */
+}
+
+/* Container for all content */
+.container {
+    max-width: 80%;
+    margin: 10px auto;
+}
+.form-container {
+    max-width: 600px; /* Ancho máximo del formulario */
+    margin: 0 auto; /* Centra el formulario horizontalmente */
+    padding: 20px;
+    border: 1px solid #343a40!important; /* Borde del formulario */
+    border-radius: 10px; /* Borde redondeado */
+}
+.text-container {
+    max-width: 100%;
+    margin: 0 auto;
+    text-align: center; /* Center the paragraphs */
+    font-family: 'Times New Roman', Times, serif; /* Set the font family to Times New Roman */
+    font-weight: 500; /* Set the font weight */
+    font-style: normal; }
+
+.form-group {
+    margin-bottom: 20px; /* Espacio entre los campos del formulario */
+}
+
+label {
+    display: block; /* Para que las etiquetas de los campos estén en una línea separada */
+    font-weight: bold; /* Texto en negrita */
+}
+
+input{
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid #343a40!important; /* Borde */
+    border-radius: 10px; /* Borde redondeado */
+    box-sizing: border-box; /* Incluir el borde y el relleno en el ancho total */
+}
+
+button[type="submit"] {
+    display: block; /* Para que el botón ocupe el ancho completo del contenedor */
+    width: 30%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 10px; /* Borde redondeado */
+    background-color: #28a745; /* Color de fondo */
+    color: #fff; /* Color del texto */
+    font-weight: bold; /* Texto en negrita */
+    cursor: pointer; /* Cambiar el cursor al pasar por encima */
+    margin: 0 auto;
+}
+
+.link a{
+    color: #343a40!important;
+}

@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>{% block title %}Inicio{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+{% block content %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ruslan+Display&display=swap">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <!-- Logo -->
+    <a class="navbar-brand" href="/"><img src="{% static 'logo.png' %}" alt="Logo" height="40"></a>
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="d-flex list-unstyled">
+            <li class="nav-item2">
+                <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+            </li>
+            <li class="nav-item2 dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Categorias</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/">Nuestros productos</a>
+                    {% for categoria in categorias %}
+                    <a class="dropdown-item" href="{% url 'categoria' categoria %}"> {{categoria}}</a>
+                    {% endfor %}
+                </div>
+            </li>
+            <li class="nav-item2 reservar-hora">
+                <a class="nav-link" href="{% url 'reserva' %}">Reservar cita</a>
+            </li>
+        </ul>
+        <div class="input-group rounded mx-auto" style="max-width: 500px;">
+            <form method="POST" action="{% url 'index'%}" class="w-100 d-flex">
+                {% csrf_token %}
+                <input type="search" class="form-control rounded" placeholder="Buscar productos" aria-label="buscar" aria-describedby="search-addon" name="buscar" />
+                <button type="submit" class="btn btn-dark"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg></button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="ml-auto mr-2">
+        <button class="btn btn-outline-light" type="button" id="carrito" onclick="window.location.href='{% url 'cart:cart_summary' %}'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+            </svg>
+        <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}</span>
+        </button>
+    </div>
+    <!-- User Dropdown -->
+    {% if user.is_authenticated %}
+    <div class="dropdown">
+        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ user.email }}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{% url 'mis_reservas' %}">Mis reservas</a>
+            <a class="dropdown-item" href="{% url 'accounts:update_user' %}">Actualizar usuario</a>
+            <a class="dropdown-item" href="{% url 'accounts:update_user_info' %}">Información del usuario</a>
+            <a class="dropdown-item" href="{% url 'payment:billing_info' %}">Información de facturación</a>
+            <a class="dropdown-item" href="{% url 'password_change' %}">Cambiar contraseña</a>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item">Cerrar sesión</button>
+            </form>
+            {% else %}
+            <a class="btn btn-danger" href="{% url 'accounts:login' %}">Iniciar sesión</a>
+            <a class="btn btn-danger" href="{% url 'accounts:signup' %}">Registrarse</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+<br><br><br><br>
+
+
+<div class="container">
+    <!-- Rest of your content -->
+    <div class="form-container">
+        {% for message in messages %}
+        <div class="alert alert-secondary" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% if result %}
+<div class="container" id="servicios">
+    <div class="row">
+        <div class="col-md-2">
+            <h4>{{ buscar }}</h4>
+        </div>
+        <div class="col-md-10">
+            {% for servicio in result%}
+                {% if forloop.first or forloop.counter0|divisibleby:5 %}
+                    <div class="row">
+                {% endif %}
+                    <div class="col-md-2 mb-3">
+                        <div class="card">
+                            {% if servicio.descuento %}
+                            <div class = "badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem; font-size: 0.8rem;">Oferta</div>
+                            {% endif %}
+                            <a href="{% url 'servicio_detalle' servicio.pk %}">
+                                <img src="{{ servicio.imagen.url }}" class="card-img-top" alt="{{ servicio.nombre }}">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title text-left" style="font-size: 18px;">
+                                    <a href="{% url 'servicio_detalle' servicio.pk %}" class="text-decoration-none text-dark">{{ servicio.nombre }}</a>
+                                </h5>
+                                {% if servicio.descuento %}
+                                <p class="card-text text-left" style="font-weight: bolder; font-size: 16px;"><strike>${{ servicio.precio }}</strike> &nbsp; ${{ servicio.precio_descuento }}<p>
+                                {% else %}
+                                <p class="card-text text-left" style="font-weight: bolder; font-size: 16px;">${{ servicio.precio }}<p>
+                                {% endif %}
+                                <button type="button" value="{{ servicio.id }}" id="add-cart-{{ servicio.id }}" class="btn btn-danger btn-block">Agregar al carrito</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% if forloop.counter|divisibleby:5 or forloop.last %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+    </div>
+</div>
+{% endif %}
+<br>
+<!-- TITULOS PRINCIPALES -->
+<div class="container2">
+    <div class="cover2">
+        <p>Nuestros productos</p>
+    </div>
+</div>
+
+<div class="container" id="servicios">
+    <div class="row">
+        <div class="col-md-2 " style="margin: 0; padding-left: 0;">
+            <p style="font-size: 16px; line-height: 20px; margin-bottom: 20px;font-family: sans-serif;"><strong>Categorías</strong></p>
+            <ul class="list-unstyled">
+                {% for categoria in categorias %}
+                <li>
+                    <label style="margin-bottom: 0;font-size: 14px;font-family:sans-serif;">
+                        <input type="checkbox" name="categoria" id="categoria-{{categoria.id}}" value="{{ categoria.id }}">
+                        {{categoria.nombre}}
+                    </label>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-10" id="filtered-servicios">
+            {% for servicio in servicios %}
+                {% if forloop.first or forloop.counter0|divisibleby:5 %}
+                <div class="row">
+                {% endif %}
+                <div class="col-md-2 mb-3">
+                    <div class="card">
+                        {% if servicio.descuento %}
+                        <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem; font-size: 0.8rem;">Oferta</div>
+                        {% endif %}
+                        <a href="{% url 'servicio_detalle' servicio.pk %}">
+                            <img src="{{ servicio.imagen.url }}" class="card-img-top" alt="{{ servicio.nombre }}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title text-left" style="font-size: 18px;">
+                                <a href="{% url 'servicio_detalle' servicio.pk %}" class="text-decoration-none text-dark">{{ servicio.nombre }}</a>
+                            </h5>
+                            {% if servicio.descuento %}
+                            <p class="card-text text-left" style="font-weight: bolder; font-size: 16px;"><strike>${{ servicio.precio }}</strike> &nbsp; ${{ servicio.precio_descuento }}</p>
+                            {% else %}
+                            <p class="card-text text-left" style="font-weight: bolder; font-size: 16px;">${{ servicio.precio }}</p>
+                            {% endif %}
+                            <button type="button" value="{{ servicio.id }}" id="add-cart-{{ servicio.id }}" class="btn btn-danger btn-block">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:5 or forloop.last %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+            </div>
+        <script>
+            $(document).ready(function() {
+                $('input[type="checkbox"]').change(function() {
+                    var selectedCategories = [];
+                    $('input[type="checkbox"]:checked').each(function() {
+                        selectedCategories.push($(this).val());
+                    });
+
+                    if (selectedCategories.length === 0) {
+                        // If no categories are selected, load all services
+                        $.ajax({
+                            type: "GET",
+                            url: "/all_services/",
+                            success: function(data) {
+                                $('#filtered-servicios').html(data.servicios);
+                            },
+                            error: function(xhr, textStatus, errorThrown) {
+                                console.log("Error:", errorThrown);
+                            }
+                        });
+                    } else {
+                        // If categories are selected, filter services by selected categories
+                        $.ajax({
+                            type: "GET",
+                            url: "/filter_products/",
+                            data: {
+                                categories: selectedCategories
+                            },
+                            success: function(data) {
+                                $('#filtered-servicios').html(data.servicios);
+                            },
+                            error: function(xhr, textStatus, errorThrown) {
+                                console.log("Error:", errorThrown);
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+
+            
+
+</div>
+
+{% endblock %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+</body>
+</html>

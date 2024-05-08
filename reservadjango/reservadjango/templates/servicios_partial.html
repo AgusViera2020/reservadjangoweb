@@ -1,0 +1,31 @@
+{% for servicio in servicios %}
+    {% if forloop.first or forloop.counter0|divisibleby:5 %}
+    <div class="row">
+    {% endif %}
+    <div class="col-md-2 mb-3">
+        <div class="card">
+            {% if servicio.descuento %}
+            <div class = "badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem; font-size: 0.8rem;">Oferta</div>
+            {% endif %}
+            <a href="{% url 'servicio_detalle' servicio.pk %}">
+                <img src="{{ servicio.imagen.url }}" class="card-img-top" alt="{{ servicio.nombre }}">
+            </a>
+            <div class="card-body">
+                <h5 class="card-title text-left" style="font-size: 18px;">
+                    <a href="{% url 'servicio_detalle' servicio.pk %}" class="text-decoration-none text-dark">{{ servicio.nombre }}</a>
+                </h5>
+                {% if servicio.descuento %}
+                <p class="card-text text-left" style="font-weight: bolder; font-size: 16px;"><strike>${{ servicio.precio }}</strike> &nbsp; ${{ servicio.precio_descuento }}</p>
+                {% else %}
+                <p class="card-text text-left" style="font-weight: bolder; font-size: 16px;">${{ servicio.precio }}</p>
+                {% endif %}
+                <button type="button" value="{{ servicio.id }}" id="add-cart-{{ servicio.id }}" class="btn btn-danger btn-block">Agregar al carrito</button>
+            </div>
+        </div>
+    </div>
+    {% if forloop.counter|divisibleby:5 or forloop.last %}
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+</div>
